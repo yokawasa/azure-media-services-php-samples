@@ -56,7 +56,7 @@ $filterArr = array (
   ),
 );
 
-$afapi = new AssetFilterAPI();
+$afapi = new AssetFilterAPI($config['accountname'], $config['accountkey']);
 $str = $afapi->createAssetFilter($filterArr);
 print_r(json_decode($str));
 
