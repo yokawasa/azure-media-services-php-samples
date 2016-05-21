@@ -1,14 +1,14 @@
 <?php
 
 //
-// Pure PHP Sample Code for Azure Media Services REST API Base Class
+// Simple PHP Sample Code for Azure Media Services REST API Base Class
 //
 const TOKEN_STORAGE = '/tmp/AMS-TOKEN_STORAGE';
 const AMS_OAUTH_URL = 'https://wamsprodglobal001acs.accesscontrol.windows.net/v2/OAuth2-13';
 const AMS_API_BASE_URL = 'https://media.windows.net/API/';
 
 /**
-* Pure PHP REST API Base Class
+* Simple PHP REST API Base Class
 */
 class RestAPI {
     protected $accountid;

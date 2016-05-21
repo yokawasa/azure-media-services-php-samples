@@ -1,14 +1,14 @@
 <?php
 
 //
-// Pure PHP Sample Code for Azure Media Services: AssetFilter Manipulation
+// Simple PHP Sample Code for Azure Media Services: AssetFilter Manipulation
 //
 
 include_once 'Config.inc';
-include_once 'PurePHPRestAPI.inc';
+include_once 'SimplePHPRestAPI.inc';
 
 /**
-* AssetFilter API Class that extends RestAPI
+* Simple AssetFilter API Class that extends RestAPI
 */
 class AssetFilterAPI extends RestAPI{
  

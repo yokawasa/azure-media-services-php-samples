@@ -1,14 +1,14 @@
 <?php
 
 //
-// Pure PHP Sample Code for Azure Media Services: Asset Manipulation
+// Simple PHP Sample Code for Azure Media Services: Asset Manipulation
 //
 
 require_once 'Config.inc';
-require_once 'PurePHPRestAPI.inc';
+require_once 'SimplePHPRestAPI.inc';
 
 /**
-* Asset API Class that extends RestAPIBase
+* Simple Asset API Class that extends RestAPI
 */
 class AssetAPI extends RestAPI{
  
