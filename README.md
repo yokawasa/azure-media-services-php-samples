@@ -43,11 +43,11 @@ You can find PHP sample codes under src directory. The followings are sample cod
  * **DynamicEncryption_PR_WV.php** - Azure PHP SDK Sample Code for PlayReady and Widevine Dynamic Encryption
  * **Common.inc** - Common libraries for Azure PHP SDK Sample Code for Azure Media Services
 
-## Pure PHP REST API Sample Codes
-You can find PHP sample codes under src directory. The followings are sample codes with short descriptions:
- * **PurePHPAssetAPI.php** - Pure PHP Sample Code for Azure Media Services REST API Base Class
- * **PurePHPAssetFilterAPI.php** - Pure PHP Sample Code for Azure Media Services: Asset Manipulation
- * **PurePHPRestAPI.inc** - Pure PHP Sample Code for Azure Media Services: AssetFilter Manipulation
+## Simple PHP REST API Sample Codes (NON PHP SDK Dependant)
+Source code files that start from 'Simple' are NON PHP SDK dependant sample codes that you can find under src directory.
+ * **SimplePHPAssetAPI.php** - Simple PHP Sample Code for Azure Media Services REST API Base Class
+ * **SimplePHPAssetFilterAPI.php** - Simple PHP Sample Code for Azure Media Services: Asset Manipulation
+ * **SimplePHPRestAPI.inc** - Simple PHP Sample Code for Azure Media Services: AssetFilter Manipulation
 
 ## TODOs
 Adding more sample codes shortly. Your contribution is always welcomed!
