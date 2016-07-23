@@ -19,20 +19,20 @@ $tokenRestriction = true;
 
 echo "Azure Media Services PHP Sample - Dynamic Encryption AES \r\n";
 
-echo "***** 1. Azure メディアサービス 接続 *****\r\n";
+echo "***** 1. Connect to Azure Media Services *****\r\n";
 $restProxy = ServicesBuilder::getInstance()->createMediaServicesService(
            new MediaServicesSettings($config['accountname'], $config['accountkey']));
 
-echo "***** 2. ファイルアップロード *****\r\n";
+echo "***** 2. Upload File *****\r\n";
 $sourceAsset = uploadFileAndCreateAsset($restProxy, $mezzanineFile);
 
-echo "***** 3. トランスコード *****\r\n";
+echo "***** 3. Transcode *****\r\n";
 $encodedAsset = encodeToAdaptiveBitrateMP4Set($restProxy, $sourceAsset);
 
-echo "***** 4. コンテンツキーの作成 *****\r\n";
+echo "***** 4. Create ContentKey *****\r\n";
 $contentKey = createEnvelopeTypeContentKey($restProxy, $encodedAsset);
 
-echo "***** 5. コンテンツキーのAuthorizationポリシーの作成 *****\r\n";
+echo "***** 5. Create Ahtorization Policy for the ContentKey *****\r\n";
 $tokenTemplateString = null;
 if ($tokenRestriction) {
     $tokenTemplateString = addTokenRestrictedAuthorizationPolicy_Envelope($restProxy, $contentKey, $tokenType);
@@ -40,18 +40,18 @@ if ($tokenRestriction) {
     addOpenAuthorizationPolicy_Envelope($restProxy, $contentKey);
 }
 
-echo "***** 6. アセットデリバリーポリシーの作成 *****\r\n";
+echo "***** 6. Create Asset Delivery Policy *****\r\n";
 createAssetDeliveryPolicy_Envelope($restProxy, $encodedAsset, $contentKey);
 
-echo "***** 7. 配信 *****\r\n";
+echo "***** 7. Create Locator for publishing *****\r\n";
 publishEncodedAsset($restProxy, $encodedAsset);
 
-echo "***** 8. テストトークン作成 *****\r\n";
+echo "***** 8. Generate Test Token *****\r\n";
 if ($tokenRestriction) {
     generateTestToken($tokenTemplateString, $contentKey);
 }
 
-echo "***** 完了! *****\r\n";
+echo "***** Done! *****\r\n";
 
 
 ?>

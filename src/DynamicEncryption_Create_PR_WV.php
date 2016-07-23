@@ -16,27 +16,28 @@ require_once 'Common.inc';
 
 $mezzanineFile = __DIR__.'/../media/BigBuckBunny.mp4';
 $tokenType = TokenType::JWT;
-$tokenRestriction = true;
+//$tokenRestriction = true;
+$tokenRestriction =false; 
 
 echo "Azure Media Services PHP Sample - Dynamic Encryption PlayReady & WideVine \r\n";
 
-echo "***** 1. Azure メディアサービス 接続 *****\r\n";
+echo "***** 1. Connect to Azure Media Services *****\r\n";
 $restProxy = ServicesBuilder::getInstance()->createMediaServicesService(
            new MediaServicesSettings($config['accountname'], $config['accountkey']));
 
-echo "***** 2. ファイルアップロード *****\r\n";
+echo "***** 2. Upload File *****\r\n";
 $sourceAsset = uploadFileAndCreateAsset($restProxy, $mezzanineFile);
 
-echo "***** 3. トランスコード *****\r\n";
+echo "***** 3. Transcode *****\r\n";
 $encodedAsset = encodeToAdaptiveBitrateMP4Set($restProxy, $sourceAsset);
 
-echo "***** 4. コンテンツキーの作成 *****\r\n";
+echo "***** 4. Create ContentKey *****\r\n";
 $contentKey = createCommonTypeContentKey($restProxy, $encodedAsset);
 
 $deliveryTypes=array();
 $deliveryTypes.array_push($deliveryTypes, ContentKeyDeliveryType::PLAYREADY_LICENSE);
 $deliveryTypes.array_push($deliveryTypes, ContentKeyDeliveryType::WIDEVINE);
-echo "***** 5. コンテンツキーのAuthorizationポリシーの作成 *****\r\n";
+echo "***** 5. Create Authorization Policy for the ContentKey *****\r\n";
 $tokenTemplateString = null;
 if ($tokenRestriction) {
     $tokenTemplateString = addTokenRestrictedAuthorizationPolicy_CENC($restProxy, $contentKey, $tokenType, $deliveryTypes);
@@ -44,18 +45,18 @@ if ($tokenRestriction) {
     addOpenAuthorizationPolicy_CENC($restProxy, $contentKey, $deliveryTypes);
 }
 
-echo "***** 6. アセットデリバリーポリシーの作成 *****\r\n";
+echo "***** 6. Create Asset Delivery Policy *****\r\n";
 createAssetDeliveryPolicy_CENC($restProxy, $encodedAsset, $contentKey, $deliveryTypes);
 
-echo "***** 7. 配信 *****\r\n";
+echo "***** 7. Create Locator for publishing *****\r\n";
 publishEncodedAsset($restProxy, $encodedAsset);
 
-echo "***** 8. テストトークン作成 *****\r\n";
+echo "***** 8. Generate Test Token *****\r\n";
 if ($tokenRestriction) {
     generateTestToken($tokenTemplateString, $contentKey);
 }
 
-echo "***** 完了! *****\r\n";
+echo "***** Done! *****\r\n";
 
 ?>
 

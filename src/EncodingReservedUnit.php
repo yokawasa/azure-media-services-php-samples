@@ -16,26 +16,33 @@ $reservedUnits = 1;
 $reservedUnitsType = EncodingReservedUnitType::S1;
 $types = array('S1', 'S2', 'S3');
 
-echo "Azure Media Services PHP Sample - Scale Encoding Units Sample\r\n";
+echo "Azure Media Services PHP Sample - Encoding Reserved Units Operation Sample\r\n";
 
-echo "***** 1. Azure メディアサービス 接続 *****\r\n";
+echo "***** 1. Connect to Azure Media Services *****\r\n";
 $restProxy = ServicesBuilder::getInstance()-> createMediaServicesService(
             new MediaServicesSettings($config['accountname'], $config['accountkey']));
 
-echo "***** 2. 現在のエンコーディングユニット設定値を取得 *****\r\n";
+echo "***** 2. Get Current Encoding Reserved Unit *****\r\n";
 $encodingUnits = $restProxy->getEncodingReservedUnit();
-echo '現在のエンコーディングユニット値: '.$encodingUnits->getCurrentReservedUnits().' units ('.$types[$encodingUnits->getReservedUnitType()].")\r\n";
+$ft = sprintf("Current Encoding Reserved Unit: %s units (%s)\r\n",
+                $encodingUnits->getCurrentReservedUnits(),
+                $types[$encodingUnits->getReservedUnitType()]);
+echo $ft;
 
-echo "***** 3. エンコーディングユニット設定値の更新 *****\r\n";
+echo "***** 3. Set encoding reserved unit Type *****\r\n";
 $encodingUnits->setCurrentReservedUnits($reservedUnits);
 $encodingUnits->setReservedUnitType($reservedUnitsType);
 
-echo "***** 4. エンコーディングリザーブドユニットの更新 *****\r\n";
+echo "***** 4. Update Encoding Reserved Unit *****\r\n";
 $restProxy->updateEncodingReservedUnit($encodingUnits);
 
-echo "***** 5. 現在のエンコーディング設定を読み込んで結果表示 *****\r\n";
+echo "***** 5. Get Updated Encoding Reserved Unit *****\r\n";
 $encodingUnits = $restProxy->getEncodingReservedUnit();
-echo "\r\n更新後のエンコーディングユニット値: ".$encodingUnits->getCurrentReservedUnits().' units ('.$types[$encodingUnits->getReservedUnitType()].")\r\n";
+$ft = sprintf("Updated Encoding Reserved Unit: %s units (%s)\r\n",
+                $encodingUnits->getCurrentReservedUnits(),
+                $types[$encodingUnits->getReservedUnitType()]);
+echo $ft;
 
+echo "***** Done! *****\r\n";
 
 ?>
