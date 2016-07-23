@@ -36,11 +36,14 @@ Please edit Config.inc and add appropriate values for each parameters before run
 
 You can find PHP sample codes under src directory. The followings are sample codes with short descriptions:
  * **Asset.php** - Azure PHP SDK Sample Code for Asset manipulation
- * **Encoding.php** - Azure PHP SDK Sample Code for Encoding manipulation
- * **DynamicPackaging.php** - Azure PHP SDK Sample Code for Dynamic Packaging
- * **DynamicEncryption_AES.php** - Azure PHP SDK Sample Code for AES Dynamic Encryption
- * **DynamicEncryption_PR.php** - Azure PHP SDK Sample Code for PlayReady Dynamic Encryption
- * **DynamicEncryption_PR_WV.php** - Azure PHP SDK Sample Code for PlayReady and Widevine Dynamic Encryption
+ * **Locator.php** - Azure PHP SDK Sample Code for Locator manipulation
+ * **EncodingReservedUnit.php** - Azure PHP SDK Sample Code for Encoding Reserved Unit manipulation
+ * **MediaProcessor.php** - Azure PHP SDK Sample Code for Media Processor manipulation
+ * **DynamicPackaging.php** - Azure PHP SDK Sample Code for Setting Dynamic Packaging and publishing
+ * **DynamicEncryption_Create_AES.php** - Azure PHP SDK Sample Code for Setting AES Dynamic Encryption and publishing
+ * **DynamicEncryption_Create_PR.php** - Azure PHP SDK Sample Code for Setting PlayReady Dynamic Encryption and publishing
+ * **DynamicEncryption_Create_PR_WV.php** - Azure PHP SDK Sample Code for Setting PlayReady & Widevine Dynamic Encryption and publishing
+ * **DynamicEncryption_Add_WV.php** - Azure PHP SDK Sample Code for Adding Widevine options to Current PlayReady DRM Configuration
  * **Common.inc** - Common libraries for Azure PHP SDK Sample Code for Azure Media Services
 
 ## Simple PHP REST API Sample Codes (NON PHP SDK Dependant)
