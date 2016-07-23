@@ -16,7 +16,6 @@ require_once 'Common.inc';
 
 $mezzanineFile = __DIR__.'/../media/BigBuckBunny.mp4';
 $tokenType = TokenType::JWT;
-//$tokenRestriction = true;
 $tokenRestriction =false; 
 
 echo "Azure Media Services PHP Sample - Dynamic Encryption PlayReady & WideVine \r\n";
@@ -35,8 +34,8 @@ echo "***** 4. Create ContentKey *****\r\n";
 $contentKey = createCommonTypeContentKey($restProxy, $encodedAsset);
 
 $deliveryTypes=array();
-$deliveryTypes.array_push($deliveryTypes, ContentKeyDeliveryType::PLAYREADY_LICENSE);
-$deliveryTypes.array_push($deliveryTypes, ContentKeyDeliveryType::WIDEVINE);
+array_push($deliveryTypes, ContentKeyDeliveryType::PLAYREADY_LICENSE);
+array_push($deliveryTypes, ContentKeyDeliveryType::WIDEVINE);
 echo "***** 5. Create Authorization Policy for the ContentKey *****\r\n";
 $tokenTemplateString = null;
 if ($tokenRestriction) {

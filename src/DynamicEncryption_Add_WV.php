@@ -20,9 +20,6 @@ use WindowsAzure\MediaServices\Models\ContentKeyRestrictionType;
 require_once 'Config.inc';
 require_once 'Common.inc';
 
-$mezzanineFile = __DIR__.'/../media/BigBuckBunny.mp4';
-$tokenType = TokenType::JWT;
-$tokenRestriction = true;
 
 echo "Azure Media Services PHP Sample - Add WideVine to Current DRM Config by updating Asset Delivery Policy \r\n";
 
@@ -87,8 +84,8 @@ foreach ($contentKeys as $ck){
     }
     // Linking New Asset delivery policy
     $deliveryTypes=array();
-    $deliveryTypes.array_push($deliveryTypes, ContentKeyDeliveryType::PLAYREADY_LICENSE);
-    $deliveryTypes.array_push($deliveryTypes, ContentKeyDeliveryType::WIDEVINE);
+    array_push($deliveryTypes, ContentKeyDeliveryType::PLAYREADY_LICENSE);
+    array_push($deliveryTypes, ContentKeyDeliveryType::WIDEVINE);
     createAssetDeliveryPolicy_CENC($restProxy, $asset, $ck, $deliveryTypes);
 }
 
