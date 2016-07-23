@@ -1,0 +1,14 @@
+Release 0.1.1 - 2016/07/23
+
+	* Add Locator manipulation sample - Locator.php
+	* Add Media Processor manipulation sample - MediaProcessor.php
+	* Add Updating Dynamic Encryption Config sample - DynamicEncryption_Add_WV.php
+	* Add Renaming like the following:
+	** Encoding.php -> EncodingReservedUnit.php
+	** DynamicEncryption_AES.php -> DynamicEncryption_Create_AES.php
+	** DynamicEncryption_PR.php -> DynamicEncryption_Create_PR.php
+	** DynamicEncryption_PR_WV.php -> DynamicEncryption_Create_PR_WV.php
+
+Release 0.1.0 - 2016/05/21
+
+	* Inital Release
