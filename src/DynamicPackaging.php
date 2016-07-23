@@ -16,20 +16,20 @@ $mezzanineFile = __DIR__.'/../media/BigBuckBunny.mp4';
 
 echo "Azure Media Services PHP Sample - Dynamic Packaging\r\n";
 
-echo "***** 1. Azure メディアサービス 接続 *****\r\n";
+echo "***** 1. Connect to Azure Media Services *****\r\n";
 $restProxy = ServicesBuilder::getInstance()->createMediaServicesService(
            new MediaServicesSettings($config['accountname'], $config['accountkey']));
 
-echo "***** 2. ファイルアップロード *****\r\n";
+echo "***** 2. Upload File *****\r\n";
 $sourceAsset = uploadFileAndCreateAsset($restProxy, $mezzanineFile);
 
-echo "***** 3. トランスコード *****\r\n";
+echo "***** 3. Transcode *****\r\n";
 $encodedAsset = encodeToAdaptiveBitrateMP4Set($restProxy, $sourceAsset);
 
-echo "***** 4. 配信 *****\r\n";
+echo "***** 4. Create Locator for publishing *****\r\n";
 publishEncodedAsset($restProxy, $encodedAsset);
 
-echo "***** 完了! *****\r\n";
+echo "***** Done! *****\r\n";
 
 ?>
 

@@ -473,7 +473,7 @@ function createAssetDeliveryPolicy_CENC($restProxy, $encodedAsset, $contentKey, 
     // Create the AssetDeliveryPolicy
     $adpolicy = new AssetDeliveryPolicy();
     $adpolicy->setName('Asset Delivery Policy');
-    $adpolicy->setAssetDeliveryProtocol(AssetDeliveryProtocol::DASH);
+    $adpolicy->setAssetDeliveryProtocol(AssetDeliveryProtocol::SMOOTH_STREAMING | AssetDeliveryProtocol::DASH);
     $adpolicy->setAssetDeliveryPolicyType(AssetDeliveryPolicyType::DYNAMIC_COMMON_ENCRYPTION);
     $adpolicy->setAssetDeliveryConfiguration($confJson);
 
