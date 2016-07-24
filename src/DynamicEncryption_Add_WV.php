@@ -42,7 +42,7 @@ foreach ($locators as $loc){
 
 echo "***** 4. Get ContentKeys *****\r\n";
 $contentKeys = $restProxy->getAssetContentKeys($assetId);
-var_dump($contentKeys);
+//var_dump($contentKeys);
 foreach ($contentKeys as $ck){
     $ckid = $ck -> getId();
     //echo "Contentkey Id="  . $ckid . "\r\n";
