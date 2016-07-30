@@ -5,12 +5,13 @@
 //  - Adding WideVine to Current DRM Config by updating Asset Delivery Policy
 //
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 use WindowsAzure\Common\ServicesBuilder;
 use WindowsAzure\Common\Internal\MediaServicesSettings;
 use WindowsAzure\MediaServices\Templates\TokenType;
 use WindowsAzure\MediaServices\Models\ContentKeyDeliveryType;
+use WindowsAzure\MediaServices\Models\ContentKeyTypes;
 
 use WindowsAzure\MediaServices\Models\ContentKeyAuthorizationPolicy;
 use WindowsAzure\MediaServices\Models\ContentKeyAuthorizationPolicyOption;
@@ -20,37 +21,79 @@ use WindowsAzure\MediaServices\Models\ContentKeyRestrictionType;
 require_once 'Config.inc';
 require_once 'Common.inc';
 
+function is_empty ($input)
+{
+    return ( isset($input) && !empty($input) ) ? false : true;
+}
 
-echo "Azure Media Services PHP Sample - Add WideVine to Current DRM Config by updating Asset Delivery Policy \r\n";
+function deleteLocators($restProxy, $assetId) {
+    $locators = $restProxy->getAssetLocators($assetId);
+    foreach ($locators as $loc){
+        $locid = $loc -> getId();
+        $restProxy->deleteLocator($locid);
+    }
+}
+
+$assetId  = "nb:cid:UUID:bec16c65-fc9c-439a-98aa-b5f60ba69d79";
 
 echo "***** 1. Connect to Azure Media Services *****\r\n";
 $restProxy = ServicesBuilder::getInstance()->createMediaServicesService(
            new MediaServicesSettings($config['accountname'], $config['accountkey']));
 
-$assetId  = "nb:cid:UUID:bec16c65-fc9c-439a-98aa-b5f60ba69d79";
-
 echo "***** 2. Get Updating Asset *****\r\n";
 $asset=$restProxy->getAsset($assetId);
-//var_dump($asset);
 
-echo "***** 3. Delete Locators *****\r\n";
-$locators = $restProxy->getAssetLocators($assetId);
-foreach ($locators as $loc){
-    $locid = $loc -> getId();
-    $restProxy->deleteLocator($locid);
-}
+$locatorRemoved = false;
+$needUpdateContentKey=false;
 
-echo "***** 4. Get ContentKeys *****\r\n";
+echo "***** 3. Get ContentKeys *****\r\n";
 $contentKeys = $restProxy->getAssetContentKeys($assetId);
-//var_dump($contentKeys);
+
 foreach ($contentKeys as $ck){
     $ckid = $ck -> getId();
-    //echo "Contentkey Id="  . $ckid . "\r\n";
+    $cktype = $ck ->getContentKeyType(); 
+    echo "Contentkey Id="  . $ckid . "\r\n";
+    if ($cktype != ContentKeyTypes::COMMON_ENCRYPTION ) { 
+        // skip if it's not CENC type
+        continue;
+    }
+
+    echo "***** 4. Get Current AuthorizationPolicy or Create new AuthorizationPolicy If not created yet *****\r\n";
+    //
+    // Particulary targetting Showtime Asset doesn't have Authorization Policy that 
+    // should be included in ContentKey. Thus, a new Authorization policy need to be 
+    // created in order to add new WideVine ContentKey Authorization Policy Options.
+    //
+    $ckapolicy = null;
     $authpolicyid = $ck ->getAuthorizationPolicyId();
+    echo "AuthorizationPolicyId Id="  . $authpolicyid . "\r\n";
+    if (is_empty($authpolicyid)) { 
+        // No Authorization Policy
+        // Thus, create new ContentKeyAuthorizationPolicy that associated with the ContentKey
+        echo "***** Create new ContentKey Authorization Policy *****\r\n";
+        // Create ContentKeyAuthorizationPolicy
+        $ckapolicy = new ContentKeyAuthorizationPolicy();
+        $ckapolicy->setName('ContentKey Authorization Policy');
+        $ckapolicy = $restProxy->createContentKeyAuthorizationPolicy($ckapolicy);
+        $needUpdateContentKey= true;
+    } 
+    else {
+        // Get ContentKeyAuthorizationPolicy for the ContentKey
+            //$ckapolicy = $restProxy->getContentKeyAuthorizationPolicy($authpolicyid);
+           echo "***** Getting ContentKey Authorization Policy *****\r\n";
+            try {
+                $ckapolicy = $restProxy->getContentKeyAuthorizationPolicy($authpolicyid);
+            } catch (Exception $e) {
+                //echo "Caught exception: ", $e->getMessage(), "\n";
+                echo "***** Caught exception, then creating new ContentKey Authorization Policy *****\r\n";
+                $ckapolicy = new ContentKeyAuthorizationPolicy();
+                $ckapolicy->setName('ContentKey Authorization Policy');
+                $ckapolicy = $restProxy->createContentKeyAuthorizationPolicy($ckapolicy);
+                $needUpdateContentKey= true;
+            }
+    }
 
     echo "***** 5. Update ContentKey by adding new WideVine ContentKey Authorization Policy Options *****\r\n";
-    // Get ContentKeyAuthorizationPolicy for the ContentKey
-    $ckapolicy = $restProxy->getContentKeyAuthorizationPolicy($authpolicyid);
     // Create ContentKeyAuthorizationPolicyRestriction (Open)
     $restriction = new ContentKeyAuthorizationPolicyRestriction();
     $restriction->setName('ContentKey Authorization Policy Restriction');
@@ -64,11 +107,21 @@ foreach ($contentKeys as $ck){
     $widevineOption->setRestrictions(array($restriction));
     $widevineOption->setKeyDeliveryConfiguration($widevineLicenseTemplate);
     $widevineOption = $restProxy->createContentKeyAuthorizationPolicyOption($widevineOption);
+
+    echo "***** linking Option To ContentKeyAuthorizationPolicy *****\r\n";
     // Link the ContentKeyAuthorizationPolicyOption to the ContentKeyAuthorizationPolicy
     $restProxy->linkOptionToContentKeyAuthorizationPolicy($widevineOption, $ckapolicy);
-    $ck->setAuthorizationPolicyId($ckapolicy->getId());
-    // Updating ContentKey
-    $restProxy->updateContentKey($ck);
+    if ( $needUpdateContentKey ) {
+        echo "***** Updating ContentKey with new Authorization Policy *****\r\n";
+        $ck->setAuthorizationPolicyId($ckapolicy->getId());
+        $restProxy->updateContentKey($ck);
+    }
+
+    echo "***** 5. Delete Locators *****\r\n";
+    if (!$locatorRemoved) {
+        deleteLocators($restProxy, $assetId);
+        $locatorRemoved = true;
+    }
 
     echo "***** 6. Update Asset Delivery Policy by removing & adding new AssetDeliveryPolicy *****\r\n";
     //// [NOTE]
@@ -95,4 +148,3 @@ publishEncodedAsset($restProxy, $asset);
 echo "***** Done! *****\r\n";
 
 ?>
-
