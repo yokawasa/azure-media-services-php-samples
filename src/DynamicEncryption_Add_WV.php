@@ -5,7 +5,7 @@
 //  - Adding WideVine to Current DRM Config by updating Asset Delivery Policy
 //
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 use WindowsAzure\Common\ServicesBuilder;
 use WindowsAzure\Common\Internal\MediaServicesSettings;
